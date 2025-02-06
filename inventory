@@ -1,0 +1,7 @@
+[servers]
+172.17.0.2 
+
+
+[servers:vars]
+appvar=nginx
+statevar=present

@@ -1,0 +1,73 @@
+- name : play with tags
+  hosts : servers
+  vars:
+    x: ziad
+    
+  tasks :
+    - name : task1
+      command : echo "task1"
+      tags : 
+        - tag1
+
+    - name : task2
+      command : echo "{{y}}"
+      tags : 
+          - tag2
+
+    - name : task3
+      command : echo "{{x}}"
+      tags : 
+          - always
+
+    - name : task4
+      apt:
+        name: "{{appvar}}"
+        state: "{{statevar}}"
+      tags : 
+          - always
+    - name : Testing loops
+      apt :
+        name : "{{item}}"
+        state : "latest"
+
+      loop:
+        - apache2
+        - mariadb-server
+        - curl
+      tags : 
+          - always
+      
+    - name : Testing When
+      command :
+        echo "{{z}}"
+      tags : 
+          - always
+      when : ansible_facts['os_family'] == "redhat"
+
+    - name: Testing Registrt
+      command: echo "Hello"
+      register: result
+      tags: 
+          - always
+
+    - name: Testing debug
+      debug: 
+        var: result
+      tags: 
+          - always
+
+    - name: stopping nginx
+      command:
+        sudo nginx -s stop
+      when: result.changed
+      tags: 
+          - always
+
+    - name: Restarting nginx if the last command changed
+      command:
+        sudo nginx
+      when: result.changed
+      tags: 
+          - always
+
+    
